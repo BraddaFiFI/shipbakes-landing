@@ -14,28 +14,11 @@
   <style>
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
     :root {
-      --cream:  #fdf6f0;
-      --terra:  #c4703a;
-      --sand:   #e8c99a;
-      --brown:  #3d1a08;
-      --mid:    #8b6f5e;
-      --white:  #fffef9;
+      --cream:#fdf6f0; --terra:#c4703a; --sand:#e8c99a;
+      --brown:#3d1a08; --mid:#8b6f5e; --white:#fffef9;
     }
     html { scroll-behavior:smooth; }
     body { font-family:'DM Sans',sans-serif; background:var(--white); color:var(--brown); overflow-x:hidden; }
-
-    /* ── CSS PHOTO FILTER MIXIN ──
-       Every photo gets: warm tone, slight brightness lift, soft saturation.
-       This makes ALL photos feel like they belong to the same world.
-       Filter: sepia adds warmth, saturate brings colour back richly,
-       brightness lifts to match the cream palette. */
-    .photo-warm {
-      filter: brightness(1.04) saturate(1.12) sepia(0.08);
-      transition: filter 0.4s;
-    }
-    .photo-warm:hover {
-      filter: brightness(1.08) saturate(1.2) sepia(0.04);
-    }
 
     /* ── NAV ── */
     nav {
@@ -46,8 +29,7 @@
     }
     nav.scrolled {
       background:rgba(255,254,249,0.96);
-      backdrop-filter:blur(14px);
-      -webkit-backdrop-filter:blur(14px);
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
       box-shadow:0 1px 0 rgba(196,112,58,0.1);
     }
     .nav-logo svg { overflow:visible; display:block; }
@@ -79,40 +61,27 @@
       display:flex; align-items:center; justify-content:center;
       background:#1a0a04;
     }
-    /* Pink pleated cake — hero photo */
     .hero-photo {
       position:absolute; inset:0;
-      background-image: url('hero.jpg.png');
+      background-image:url('hero.jpg.png');
       background-size:cover; background-position:center 30%;
-      filter: brightness(0.88) saturate(1.15) sepia(0.1);
+      filter:brightness(0.88) saturate(1.15) sepia(0.1);
       will-change:transform, filter;
-      transform-origin:center center;
     }
-    /* Warm dark gradient so logo reads clearly */
     .hero-overlay {
       position:absolute; inset:0; z-index:1;
-      background:linear-gradient(
-        to bottom,
-        rgba(61,26,8,0.22) 0%,
-        rgba(61,26,8,0.05) 45%,
-        rgba(61,26,8,0.5) 100%
-      );
+      background:linear-gradient(to bottom, rgba(61,26,8,0.22) 0%, rgba(61,26,8,0.05) 45%, rgba(61,26,8,0.52) 100%);
     }
     .hero-text {
-      position:relative; z-index:5;
-      text-align:center; display:flex;
-      flex-direction:column; align-items:center;
+      position:relative; z-index:5; text-align:center;
+      display:flex; flex-direction:column; align-items:center;
       margin-top:32vh;
     }
-    .hero-logo-wrap {
-      margin-bottom:1.1rem;
-      filter:drop-shadow(0 2px 24px rgba(61,26,8,0.35));
-    }
+    .hero-logo-wrap { margin-bottom:1.1rem; filter:drop-shadow(0 2px 24px rgba(61,26,8,0.35)); }
     .hero-tagline {
       font-family:'Lora',serif; font-style:italic;
       font-size:1.25rem; color:rgba(255,254,249,0.92);
-      letter-spacing:0.04em;
-      text-shadow:0 1px 16px rgba(61,26,8,0.45);
+      letter-spacing:0.04em; text-shadow:0 1px 16px rgba(61,26,8,0.45);
     }
     .hero-tagline strong { font-weight:400; color:var(--sand); }
     .scroll-hint {
@@ -121,10 +90,7 @@
       font-size:0.68rem; letter-spacing:0.22em; text-transform:uppercase;
       animation:hintbounce 2.4s ease-in-out infinite;
     }
-    .scroll-hint::after {
-      content:''; width:1px; height:36px;
-      background:linear-gradient(to bottom, rgba(255,254,249,0.38), transparent);
-    }
+    .scroll-hint::after { content:''; width:1px; height:36px; background:linear-gradient(to bottom,rgba(255,254,249,0.38),transparent); }
     @keyframes hintbounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
 
     /* ── MARQUEE ── */
@@ -134,55 +100,71 @@
     .marquee-item { font-family:'Playfair Display',serif; font-style:italic; font-size:0.95rem; color:var(--white); padding:0 2rem; opacity:0.92; }
     .marquee-dot { color:rgba(255,254,249,0.35); }
 
-    /* ── GALLERY ── */
-    .gallery { background:var(--cream); padding:6rem 3rem; }
-    .gallery-hd { text-align:center; margin-bottom:3.5rem; }
-    .gallery-hd .eyebrow { justify-content:center; }
-    .gallery-hd .eyebrow::after { display:none; }
-    .gallery-hd h2 { font-family:'Playfair Display',serif; font-size:2.8rem; color:var(--brown); }
-    .gallery-hd h2 em { font-style:italic; color:var(--terra); }
-    .gallery-hd p { color:var(--mid); font-size:0.9rem; margin-top:0.75rem; font-weight:300; }
-
-    /* Masonry-style grid */
-    .cake-grid {
-      columns:3; column-gap:1.2rem;
+    /* ── GALLERY CAROUSEL ── */
+    .gallery { background:var(--cream); padding:5rem 0 5rem 3rem; overflow:hidden; }
+    .gallery-hd { padding-right:3rem; margin-bottom:2.5rem; display:flex; justify-content:space-between; align-items:flex-end; }
+    .gallery-hd-left h2 { font-family:'Playfair Display',serif; font-size:2.6rem; color:var(--brown); line-height:1.1; }
+    .gallery-hd-left h2 em { font-style:italic; color:var(--terra); }
+    .gallery-hd-left p { color:var(--mid); font-size:0.88rem; margin-top:0.5rem; font-weight:300; }
+    .gallery-nav { display:flex; gap:0.75rem; }
+    .gallery-nav button {
+      width:44px; height:44px; border-radius:50%;
+      border:1.5px solid rgba(196,112,58,0.3);
+      background:var(--white); color:var(--terra);
+      font-size:1.1rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition:all 0.2s;
     }
-    .cake-item {
-      break-inside:avoid;
-      margin-bottom:1.2rem;
-      border-radius:10px;
+    .gallery-nav button:hover { background:var(--terra); color:var(--white); border-color:var(--terra); }
+
+    /* The horizontal scroll track */
+    .carousel-track {
+      display:flex; gap:1.2rem;
+      overflow-x:auto; overflow-y:hidden;
+      scroll-behavior:smooth; -webkit-overflow-scrolling:touch;
+      padding-right:3rem; padding-bottom:1rem;
+      cursor:grab;
+      /* hide scrollbar */
+      scrollbar-width:none; -ms-overflow-style:none;
+    }
+    .carousel-track::-webkit-scrollbar { display:none; }
+    .carousel-track.dragging { cursor:grabbing; scroll-behavior:auto; }
+
+    /* Each cake card */
+    .cake-card {
+      flex:0 0 300px;
+      height:400px;
+      border-radius:14px;
       overflow:hidden;
       position:relative;
-      cursor:pointer;
+      background:var(--sand);
+      box-shadow:0 4px 24px rgba(139,69,19,0.08);
+      transition:transform 0.35s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.35s;
     }
-    .cake-item img {
-      width:100%; display:block;
-      border-radius:10px;
-      filter: brightness(1.03) saturate(1.1) sepia(0.07);
+    .cake-card:hover { transform:translateY(-6px) scale(1.01); box-shadow:0 16px 48px rgba(139,69,19,0.14); }
+    .cake-card img {
+      width:100%; height:115%;  /* taller than card = crops bottom watermark */
+      object-fit:cover;
+      object-position:center top; /* anchor to top = watermark at bottom gets cut */
+      display:block;
+      filter:brightness(1.03) saturate(1.1) sepia(0.07);
       transition:transform 0.5s cubic-bezier(0.34,1.2,0.64,1), filter 0.4s;
     }
-    .cake-item:hover img {
-      transform:scale(1.04);
-      filter: brightness(1.08) saturate(1.18) sepia(0.04);
+    .cake-card:hover img { transform:scale(1.04); filter:brightness(1.07) saturate(1.18) sepia(0.04); }
+    /* Subtle warm gradient at bottom of each card */
+    .cake-card::after {
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(to top, rgba(61,26,8,0.2) 0%, transparent 45%);
+      pointer-events:none; border-radius:14px;
     }
-    /* Subtle warm overlay on each card */
-    .cake-item::after {
-      content:'';
-      position:absolute; inset:0;
-      background:linear-gradient(to top, rgba(61,26,8,0.18) 0%, transparent 50%);
-      border-radius:10px;
-      pointer-events:none;
-      opacity:0;
-      transition:opacity 0.3s;
-    }
-    .cake-item:hover::after { opacity:1; }
+
+    /* Scroll progress dots */
+    .carousel-dots { display:flex; gap:6px; justify-content:center; margin-top:1.8rem; padding-right:3rem; }
+    .carousel-dot { width:6px; height:6px; border-radius:50%; background:rgba(196,112,58,0.2); transition:all 0.3s; cursor:pointer; }
+    .carousel-dot.active { width:20px; border-radius:4px; background:var(--terra); }
 
     /* ── UTILITY ── */
-    .eyebrow {
-      font-size:0.7rem; letter-spacing:0.22em; text-transform:uppercase;
-      color:var(--terra); margin-bottom:1rem;
-      display:flex; align-items:center; gap:0.75rem;
-    }
+    .eyebrow { font-size:0.7rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--terra); margin-bottom:1rem; display:flex; align-items:center; gap:0.75rem; }
     .eyebrow::after { content:''; width:32px; height:1px; background:var(--terra); opacity:0.35; }
 
     /* ── ABOUT ── */
@@ -191,25 +173,13 @@
       position:relative; overflow:hidden;
       display:flex; align-items:flex-end; padding:2.5rem;
       min-height:560px;
-      /* Ship's portrait */
       background-image:url('ship.jpg.jpeg');
       background-size:cover; background-position:center top;
-      filter: brightness(1.02) saturate(1.1) sepia(0.06);
+      filter:brightness(1.02) saturate(1.1) sepia(0.06);
     }
-    .about-img::after {
-      content:''; position:absolute; inset:0;
-      background:linear-gradient(to top, rgba(61,26,8,0.62) 0%, rgba(61,26,8,0.08) 55%, transparent 100%);
-    }
-    .about-quote {
-      background:rgba(255,254,249,0.93);
-      backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
-      border:1px solid rgba(196,112,58,0.15); border-radius:8px;
-      padding:1.5rem; position:relative; z-index:2; width:100%;
-    }
-    .about-quote blockquote {
-      font-family:'Playfair Display',serif; font-style:italic;
-      font-size:1.05rem; color:var(--brown); line-height:1.75; margin-bottom:0.7rem;
-    }
+    .about-img::after { content:''; position:absolute; inset:0; background:linear-gradient(to top,rgba(61,26,8,0.62) 0%,rgba(61,26,8,0.08) 55%,transparent 100%); }
+    .about-quote { background:rgba(255,254,249,0.93); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid rgba(196,112,58,0.15); border-radius:8px; padding:1.5rem; position:relative; z-index:2; width:100%; }
+    .about-quote blockquote { font-family:'Playfair Display',serif; font-style:italic; font-size:1.05rem; color:var(--brown); line-height:1.75; margin-bottom:0.7rem; }
     .about-quote-sig { font-family:'Dancing Script',cursive; font-size:1.3rem; color:var(--terra); }
     .about-copy { padding:5rem 4rem; display:flex; flex-direction:column; justify-content:center; }
     .about-copy h2 { font-family:'Playfair Display',serif; font-size:2.6rem; font-weight:700; color:var(--brown); line-height:1.2; margin-bottom:1.6rem; }
@@ -269,6 +239,8 @@
     /* ── FOOTER ── */
     footer { background:var(--white); border-top:1px solid rgba(196,112,58,0.1); padding:2.5rem 3rem; display:flex; justify-content:space-between; align-items:center; }
     .footer-right { text-align:right; color:rgba(61,26,8,0.3); font-size:0.78rem; line-height:1.8; }
+    .footer-right a { color:rgba(61,26,8,0.45); text-decoration:none; border-bottom:1px solid rgba(196,112,58,0.3); transition:color 0.2s; }
+    .footer-right a:hover { color:var(--terra); }
 
     /* ── SCROLL REVEAL ── */
     .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1); }
@@ -283,10 +255,11 @@
       .hero-text { margin-top:26vh; }
       .hero-tagline { font-size:1rem; padding:0 1rem; }
       .hero-logo-wrap svg { width:210px; }
-      .marquee-item { font-size:0.85rem; padding:0 1.2rem; }
-      .gallery { padding:4rem 1rem; }
-      .cake-grid { columns:2; column-gap:0.8rem; }
-      .cake-item { margin-bottom:0.8rem; }
+      .gallery { padding:4rem 0 4rem 1.5rem; }
+      .gallery-hd { padding-right:1.5rem; flex-direction:column; align-items:flex-start; gap:1rem; }
+      .cake-card { flex:0 0 240px; height:320px; }
+      .carousel-track { padding-right:1.5rem; }
+      .carousel-dots { padding-right:1.5rem; }
       .about { grid-template-columns:1fr; }
       .about-img { min-height:360px; }
       .about-copy { padding:2.5rem 1.5rem; }
@@ -298,16 +271,12 @@
       .reviews { padding:4rem 1.5rem; }
       .reviews-hd h2 { font-size:2rem; }
       .notes-grid { grid-template-columns:1fr; gap:2rem; }
-      .note:nth-child(1), .note:nth-child(2), .note:nth-child(3) { transform:rotate(0); margin-top:0; }
+      .note:nth-child(1),.note:nth-child(2),.note:nth-child(3) { transform:rotate(0); margin-top:0; }
       .contact { grid-template-columns:1fr; padding:4rem 1.5rem; gap:2.5rem; }
       .contact-left h2 { font-size:2rem; }
       .form-row { grid-template-columns:1fr; }
       footer { flex-direction:column; gap:1rem; text-align:center; padding:2rem 1.5rem; }
       .footer-right { text-align:center; }
-    }
-
-    @media (max-width:480px) {
-      .cake-grid { columns:1; }
     }
   </style>
 </head>
@@ -335,7 +304,7 @@
     </button>
   </nav>
 
-  <!-- HERO — pink pleated cake full screen -->
+  <!-- HERO -->
   <section class="hero" id="hero">
     <div class="hero-photo" id="heroPhoto"></div>
     <div class="hero-overlay"></div>
@@ -374,63 +343,41 @@
     </div>
   </div>
 
-  <!-- GALLERY — all 14 cakes -->
+  <!-- GALLERY CAROUSEL -->
   <section class="gallery" id="gallery">
     <div class="gallery-hd reveal">
-      <div class="eyebrow">The work</div>
-      <h2>Every cake is a <em>masterpiece.</em></h2>
-      <p>Each one custom made. Each one baked from scratch. Each one made for someone special.</p>
-    </div>
-    <div class="cake-grid">
-      <!-- Batch 1 — first 6 photos -->
-      <div class="cake-item reveal" style="transition-delay:0.03s">
-        <img src="cake-tuxedo.jpg.png" alt="Tuxedo 40th birthday cake" loading="lazy">
+      <div class="gallery-hd-left">
+        <div class="eyebrow">The work</div>
+        <h2>Every cake is a <em>masterpiece.</em></h2>
+        <p>Drag to explore · Each one custom · Each one from scratch</p>
       </div>
-      <div class="cake-item reveal" style="transition-delay:0.06s">
-        <img src="cake-mancity.jpg.png" alt="Manchester City birthday cake" loading="lazy">
-      </div>
-      <div class="cake-item reveal" style="transition-delay:0.09s">
-        <img src="cake-icecream.jpg.png" alt="Ice cream cone birthday cake" loading="lazy">
-      </div>
-      <div class="cake-item reveal" style="transition-delay:0.12s">
-        <img src="cake-queen.jpg.png" alt="Birthday Queen crown cake" loading="lazy">
-      </div>
-      <div class="cake-item reveal" style="transition-delay:0.15s">
-        <img src="cake-rugby.jpg.png" alt="Springboks rugby cake" loading="lazy">
-      </div>
-      <div class="cake-item reveal" style="transition-delay:0.18s">
-        <img src="cake-soccer.jpg.png" alt="Soccer birthday cake" loading="lazy">
-      </div>
-      <!-- Batch 2 — second 6 photos -->
-      <div class="cake-item reveal" style="transition-delay:0.21s">
-        <img src="cake-fairy.jpg.png" alt="Fairy garden birthday cake" loading="lazy">
-      </div>
-      <div class="cake-item reveal" style="transition-delay:0.24s">
-        <img src="cake-giantcupcake.jpg.png" alt="Giant cupcake with butterflies" loading="lazy">
-      </div>
-      <div class="cake-item reveal" style="transition-delay:0.27s">
-        <img src="cake-spiderman.jpg.png" alt="Spiderman birthday cake" loading="lazy">
-      </div>
-      <div class="cake-item reveal" style="transition-delay:0.30s">
-        <img src="cake-teal.jpg.png" alt="Teal and gold leaf painted cake" loading="lazy">
-      </div>
-      <div class="cake-item reveal" style="transition-delay:0.33s">
-        <img src="cake-jurassic.jpg.png" alt="Jurassic Park birthday cake" loading="lazy">
-      </div>
-      <div class="cake-item reveal" style="transition-delay:0.36s">
-        <img src="cake-purple.jpg.png" alt="Purple barrel celebration cake" loading="lazy">
-      </div>
-      <!-- Last 2 photos -->
-      <div class="cake-item reveal" style="transition-delay:0.39s">
-        <img src="cake-pleated.jpg.png" alt="Pink pleated birthday cake" loading="lazy">
-      </div>
-      <div class="cake-item reveal" style="transition-delay:0.42s">
-        <img src="cake-photo.jpg.png" alt="Photo memory cake with black bows" loading="lazy">
+      <div class="gallery-nav">
+        <button id="prevBtn" aria-label="Previous">←</button>
+        <button id="nextBtn" aria-label="Next">→</button>
       </div>
     </div>
+
+    <div class="carousel-track" id="carouselTrack">
+      <div class="cake-card"><img src="cake-tuxedo.jpg.png"      alt="Tuxedo 40th birthday cake" loading="lazy"></div>
+      <div class="cake-card"><img src="cake-fairy.jpg.png"       alt="Fairy garden birthday cake" loading="lazy"></div>
+      <div class="cake-card"><img src="cake-queen.jpg.png"       alt="Birthday Queen crown cake" loading="lazy"></div>
+      <div class="cake-card"><img src="cake-pleated.jpg.png"     alt="Pink pleated birthday cake" loading="lazy"></div>
+      <div class="cake-card"><img src="cake-giantcupcake.jpg.png" alt="Giant cupcake with butterflies" loading="lazy"></div>
+      <div class="cake-card"><img src="cake-purple.jpg.png"      alt="Purple barrel celebration cake" loading="lazy"></div>
+      <div class="cake-card"><img src="cake-icecream.jpg.png"    alt="Ice cream cone birthday cake" loading="lazy"></div>
+      <div class="cake-card"><img src="cake-mancity.jpg.png"     alt="Manchester City birthday cake" loading="lazy"></div>
+      <div class="cake-card"><img src="cake-soccer.jpg.png"      alt="Soccer birthday cake" loading="lazy"></div>
+      <div class="cake-card"><img src="cake-rugby.jpg.png"       alt="Springboks rugby cake" loading="lazy"></div>
+      <div class="cake-card"><img src="cake-spiderman.jpg.png"   alt="Spiderman birthday cake" loading="lazy"></div>
+      <div class="cake-card"><img src="cake-teal.jpg.png"        alt="Teal and gold leaf painted cake" loading="lazy"></div>
+      <div class="cake-card"><img src="cake-jurassic.jpg.png"    alt="Jurassic Park birthday cake" loading="lazy"></div>
+      <div class="cake-card"><img src="cake-photo.jpg.png"       alt="Photo memory cake with black bows" loading="lazy"></div>
+    </div>
+
+    <div class="carousel-dots" id="carouselDots"></div>
   </section>
 
-  <!-- ABOUT — Ship's story -->
+  <!-- ABOUT -->
   <section class="about" id="about">
     <div class="about-img">
       <div class="about-quote reveal">
@@ -468,7 +415,7 @@
         <div class="step reveal" style="transition-delay:0.19s">
           <div class="step-n">3</div>
           <h3>Collect &amp; Celebrate</h3>
-          <p>Come collect on your agreed date. Pay on collection. Take your cake home and make someone's day unforgettable.</p>
+          <p>Come collect on your agreed date. Take your cake home and make someone's day unforgettable.</p>
         </div>
       </div>
     </div>
@@ -502,7 +449,7 @@
     </div>
   </section>
 
-  <!-- ORDER / CONTACT -->
+  <!-- ORDER -->
   <section class="contact" id="order">
     <div class="contact-left">
       <div class="eyebrow reveal">Let's bake together</div>
@@ -516,7 +463,6 @@
         <div class="fact"><span class="fact-dot"></span>Address shared on order confirmation</div>
         <div class="fact"><span class="fact-dot"></span>Mon – Sat · 8am to 6pm</div>
         <div class="fact"><span class="fact-dot"></span>Please order at least 3–5 days in advance</div>
-        <div class="fact"><span class="fact-dot"></span>Pay on collection — no card needed</div>
       </div>
     </div>
     <form class="order-form reveal" style="transition-delay:0.1s" action="mailto:shipbakes@gmail.com" method="post" enctype="text/plain">
@@ -537,6 +483,7 @@
           <option>Celebration Cake</option>
           <option>Cupcakes</option>
           <option>Giant Cupcake</option>
+          <option>Custom Design</option>
           <option>Not sure yet — help me decide</option>
         </select>
       </div>
@@ -561,17 +508,16 @@
     </svg>
     <div class="footer-right">
       Baked with love in South Africa · Collect only<br>
-      © 2025 Ship Bakes · Built with love by CronKode
+      © 2025 Ship Bakes · Built with love by <a href="https://cronkode.co.za" target="_blank" rel="noopener">CronKode</a>
     </div>
   </footer>
 
   <script>
-    // Nav scroll + logo colour
+    // ── Nav scroll + logo colour ──
     const nav = document.getElementById('mainNav');
     const logoText = document.getElementById('logoText');
     const logoLine = document.getElementById('logoLine');
     const drips = ['logoDrip1','logoDrip2','logoDrip3'].map(id => document.getElementById(id));
-
     window.addEventListener('scroll', () => {
       const past = window.scrollY > 60;
       nav.classList.toggle('scrolled', past);
@@ -581,15 +527,13 @@
       drips.forEach(d => { if (d) d.setAttribute('stroke', c); });
     }, { passive:true });
 
-    // Scroll reveal
+    // ── Scroll reveal ──
     const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
-      });
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
     }, { threshold:0.1 });
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-    // Hero photo scroll — slow zoom + warm blur as you scroll into the cake
+    // ── Hero scroll zoom ──
     const heroPhoto = document.getElementById('heroPhoto');
     window.addEventListener('scroll', () => {
       const heroH = document.getElementById('hero').offsetHeight;
@@ -598,6 +542,64 @@
       heroPhoto.style.transform = `scale(${1 + p * 0.09})`;
       heroPhoto.style.filter = `brightness(${0.88 - p * 0.08}) saturate(${1.15 + p * 0.1}) sepia(${0.1 + p * 0.12}) blur(${p * 8}px)`;
     }, { passive:true });
+
+    // ── Carousel ──
+    const track = document.getElementById('carouselTrack');
+    const cards = track.querySelectorAll('.cake-card');
+    const dotsContainer = document.getElementById('carouselDots');
+    const CARD_WIDTH = () => cards[0].offsetWidth + 16; // card + gap
+    const VISIBLE = () => Math.round(track.offsetWidth / CARD_WIDTH());
+    const TOTAL_DOTS = () => Math.ceil(cards.length / VISIBLE());
+
+    // Build dots
+    let dots = [];
+    function buildDots() {
+      dotsContainer.innerHTML = '';
+      dots = [];
+      for (let i = 0; i < TOTAL_DOTS(); i++) {
+        const d = document.createElement('div');
+        d.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+        d.addEventListener('click', () => scrollToPage(i));
+        dotsContainer.appendChild(d);
+        dots.push(d);
+      }
+    }
+    buildDots();
+
+    function scrollToPage(page) {
+      track.scrollTo({ left: page * CARD_WIDTH() * VISIBLE(), behavior:'smooth' });
+    }
+
+    function updateDots() {
+      const page = Math.round(track.scrollLeft / (CARD_WIDTH() * VISIBLE()));
+      dots.forEach((d, i) => d.classList.toggle('active', i === page));
+    }
+
+    track.addEventListener('scroll', updateDots, { passive:true });
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      track.scrollBy({ left: -CARD_WIDTH() * VISIBLE(), behavior:'smooth' });
+    });
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      track.scrollBy({ left: CARD_WIDTH() * VISIBLE(), behavior:'smooth' });
+    });
+
+    // Drag to scroll
+    let isDown = false, startX, scrollLeft;
+    track.addEventListener('mousedown', e => {
+      isDown = true; track.classList.add('dragging');
+      startX = e.pageX - track.offsetLeft;
+      scrollLeft = track.scrollLeft;
+    });
+    track.addEventListener('mouseleave', () => { isDown = false; track.classList.remove('dragging'); });
+    track.addEventListener('mouseup', () => { isDown = false; track.classList.remove('dragging'); });
+    track.addEventListener('mousemove', e => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - track.offsetLeft;
+      track.scrollLeft = scrollLeft - (x - startX) * 1.5;
+    });
+
+    window.addEventListener('resize', buildDots);
   </script>
 
 </body>
