@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ship Bakes — Baked with love, made from scratch</title>
+  <meta name="description" content="Ship Bakes is a home bakery specialising in birthday cakes, celebration cakes and cupcakes. Baked from scratch with love. Collect only, South Africa.">
+  <meta property="og:title" content="Ship Bakes">
+  <meta property="og:description" content="Baked with love, made from scratch.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Dancing+Script:wght@600;700&family=Lora:ital,wght@0,400;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --cream:#fdf6f0; --terra:#c4703a; --sand:#e8c99a;
+      --brown:#3d1a08; --mid:#8b6f5e; --white:#fffef9;
+    }
+    html { scroll-behavior:smooth; }
+    body { font-family:'DM Sans',sans-serif; background:var(--white); color:var(--brown); overflow-x:hidden; }
+
+    /* NAV */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:100;
+      display:flex; justify-content:space-between; align-items:center;
+      padding:1.4rem 3rem;
+      transition:background 0.4s, box-shadow 0.4s;
+    }
+    nav.scrolled {
+      background:rgba(255,254,249,0.96);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+      box-shadow:0 1px 0 rgba(196,112,58,0.1);
+    }
+    .nav-logo svg { overflow:visible; display:block; }
+    .nav-links { display:flex; gap:2.5rem; list-style:none; align-items:center; }
+    .nav-links a {
+      color:rgba(255,254,249,0.85); text-decoration:none;
+      font-size:0.78rem; letter-spacing:0.14em; text-transform:uppercase;
+      font-weight:400; transition:color 0.2s;
+    }
+    nav.scrolled .nav-links a { color:rgba(61,26,8,0.55); }
+    .nav-links a:hover { color:var(--terra); }
+    .nav-cta {
+      background:var(--terra); color:var(--white);
+      padding:0.6rem 1.5rem; border-radius:50px;
+      font-size:0.78rem; letter-spacing:0.08em; font-weight:500;
+      border:none; cursor:pointer; font-family:'DM Sans',sans-serif;
+      transition:opacity 0.2s;
+    }
+    .nav-cta:hover { opacity:0.88; }
+    .nav-mobile-toggle { display:none; background:none; border:none; cursor:pointer; padding:0.4rem; }
+    .hamburger { width:22px; display:flex; flex-direction:column; gap:5px; }
+    .hamburger span { display:block; height:1.5px; background:var(--white); border-radius:2px; transition:background 0.3s; }
+    nav.scrolled .hamburger span { background:var(--brown); }
+
+    /* HERO */
+    .hero {
+      width:100%; height:100vh; min-height:640px;
+      position:relative; overflow:hidden;
+      display:flex; align-items:center; justify-content:center;
+    }
+    /* ← SWAP this URL for the client's real top-down cake photo */
+    .hero-photo {
+      position:absolute; inset:0;
+      background-image:url('https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=1600&q=90&auto=format&fit=crop');
+      background-size:cover; background-position:center top;
+      will-change:transform, filter;
+      transition:filter 0.04s linear;
+    }
+    .hero-overlay {
+      position:absolute; inset:0; z-index:1;
+      background:linear-gradient(to bottom, rgba(61,26,8,0.18) 0%, rgba(61,26,8,0.05) 50%, rgba(61,26,8,0.35) 100%);
+      pointer-events:none;
+    }
+    .hero-grade {
+      position:absolute; inset:0; z-index:2;
+      background:rgba(232,201,154,0.1);
+      mix-blend-mode:multiply; pointer-events:none;
+    }
+    .hero-text {
+      position:relative; z-index:5;
+      text-align:center; display:flex;
+      flex-direction:column; align-items:center;
+      margin-top:28vh;
+    }
+    .hero-logo-wrap {
+      margin-bottom:1rem;
+      filter:drop-shadow(0 2px 20px rgba(61,26,8,0.3));
+    }
+    .hero-tagline {
+      font-family:'Lora',serif; font-style:italic;
+      font-size:1.25rem; color:rgba(255,254,249,0.92);
+      letter-spacing:0.04em;
+      text-shadow:0 1px 14px rgba(61,26,8,0.4);
+    }
+    .hero-tagline strong { font-weight:400; color:var(--sand); }
+    .scroll-hint {
+      display:flex; flex-direction:column; align-items:center; gap:8px;
+      margin-top:2rem; color:rgba(255,254,249,0.45);
+      font-size:0.68rem; letter-spacing:0.22em; text-transform:uppercase;
+      animation:hintbounce 2.4s ease-in-out infinite;
+    }
+    .scroll-hint::after {
+      content:''; width:1px; height:36px;
+      background:linear-gradient(to bottom, rgba(255,254,249,0.4), transparent);
+    }
+    @keyframes hintbounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+
+    /* MARQUEE */
+    .marquee { background:var(--terra); padding:0.85rem 0; overflow:hidden; white-space:nowrap; }
+    .marquee-track { display:inline-flex; animation:roll 24s linear infinite; }
+    @keyframes roll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+    .marquee-item { font-family:'Playfair Display',serif; font-style:italic; font-size:0.95rem; color:var(--white); padding:0 2rem; opacity:0.92; }
+    .marquee-dot { color:rgba(255,254,249,0.35); }
+
+    /* CAKES / MENU */
+    .menu { position:relative; overflow:hidden; min-height:88vh; display:flex; align-items:center; }
+    /* ← SWAP this URL for a real cake photo (blurred bg) */
+    .menu-bg-photo {
+      position:absolute; inset:0;
+      background-image:url('https://images.unsplash.com/photo-1535141192574-5d4897c12636?w=1400&q=80&auto=format&fit=crop');
+      background-size:cover; background-position:center;
+      filter:blur(4px) brightness(1.06) saturate(1.1);
+      transform:scale(1.05);
+    }
+    .menu-bg-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(135deg, rgba(253,246,240,0.9) 0%, rgba(253,246,240,0.78) 50%, rgba(232,201,154,0.6) 100%);
+    }
+    .menu-inner { position:relative; z-index:2; width:100%; padding:5rem 3rem; }
+    .menu-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:3.5rem; }
+    .menu-header h2 { font-family:'Playfair Display',serif; font-size:3.2rem; font-weight:700; color:var(--brown); line-height:1.1; }
+    .menu-header h2 em { font-style:italic; color:var(--terra); }
+    .menu-header p { color:var(--mid); font-size:0.88rem; max-width:200px; text-align:right; line-height:1.75; font-weight:300; }
+    .menu-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+    .menu-card {
+      background:rgba(255,254,249,0.86);
+      backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+      border:1px solid rgba(196,112,58,0.14); border-radius:14px; padding:2.2rem;
+      cursor:pointer; transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s;
+    }
+    .menu-card:hover { transform:translateY(-8px) scale(1.01); box-shadow:0 24px 60px rgba(139,69,19,0.13); }
+    .menu-card-num { font-family:'Playfair Display',serif; font-size:3rem; font-weight:900; color:rgba(196,112,58,0.1); line-height:1; margin-bottom:0.4rem; }
+    .menu-card h3 { font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--brown); margin-bottom:0.65rem; }
+    .menu-card p { color:var(--mid); font-size:0.88rem; line-height:1.8; font-weight:300; margin-bottom:1.6rem; }
+    .card-cta { font-size:0.76rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--terra); display:flex; align-items:center; gap:0.5rem; font-weight:500; }
+    .card-cta::after { content:'→'; transition:transform 0.2s; display:inline-block; }
+    .menu-card:hover .card-cta::after { transform:translateX(5px); }
+
+    /* UTILITY */
+    .eyebrow { font-size:0.7rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--terra); margin-bottom:1rem; display:flex; align-items:center; gap:0.75rem; }
+    .eyebrow::after { content:''; width:32px; height:1px; background:var(--terra); opacity:0.35; }
+
+    /* ABOUT */
+    .about { background:var(--white); display:grid; grid-template-columns:1fr 1fr; min-height:75vh; }
+    /* ← SWAP this URL for the baker's real photo */
+    .about-img {
+      position:relative; overflow:hidden; display:flex; align-items:flex-end; padding:2.5rem;
+      min-height:500px;
+      background-image:url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=900&q=85&auto=format&fit=crop');
+      background-size:cover; background-position:center;
+    }
+    .about-img::after {
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(to top, rgba(61,26,8,0.6) 0%, rgba(61,26,8,0.1) 55%, transparent 100%);
+    }
+    .about-quote {
+      background:rgba(255,254,249,0.92); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+      border:1px solid rgba(196,112,58,0.15); border-radius:8px; padding:1.5rem;
+      position:relative; z-index:2; width:100%;
+    }
+    .about-quote blockquote { font-family:'Playfair Display',serif; font-style:italic; font-size:1.05rem; color:var(--brown); line-height:1.75; margin-bottom:0.7rem; }
+    .about-quote-sig { font-family:'Dancing Script',cursive; font-size:1.2rem; color:var(--terra); }
+    .about-copy { padding:5rem 4rem; display:flex; flex-direction:column; justify-content:center; }
+    .about-copy h2 { font-family:'Playfair Display',serif; font-size:2.6rem; font-weight:700; color:var(--brown); line-height:1.2; margin-bottom:1.6rem; }
+    .about-copy h2 em { font-style:italic; color:var(--terra); }
+    .about-copy p { color:var(--mid); font-size:0.95rem; line-height:1.9; font-weight:300; margin-bottom:1.1rem; }
+    .scratch-badge { margin-top:1.2rem; display:inline-flex; align-items:center; gap:0.5rem; background:rgba(196,112,58,0.07); border:1px solid rgba(196,112,58,0.18); padding:0.55rem 1.2rem; border-radius:50px; font-size:0.8rem; color:var(--terra); letter-spacing:0.04em; }
+
+    /* HOW TO ORDER */
+    .how { background:var(--cream); padding:6rem 3rem; }
+    .how-inner { max-width:880px; margin:0 auto; text-align:center; }
+    .how-inner h2 { font-family:'Playfair Display',serif; font-size:2.6rem; color:var(--brown); margin-bottom:0.5rem; }
+    .how-inner h2 em { font-style:italic; color:var(--terra); }
+    .how-sub { color:var(--mid); font-size:0.9rem; margin-bottom:4rem; font-weight:300; }
+    .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:3rem; position:relative; }
+    .steps::before { content:''; position:absolute; top:26px; left:calc(100%/6 + 1.5rem); right:calc(100%/6 + 1.5rem); height:1px; background:rgba(196,112,58,0.2); }
+    .step { text-align:center; }
+    .step-n { width:52px; height:52px; border-radius:50%; border:1px solid rgba(196,112,58,0.3); background:var(--white); display:flex; align-items:center; justify-content:center; margin:0 auto 1.4rem; font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:var(--terra); }
+    .step h3 { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--brown); margin-bottom:0.6rem; }
+    .step p { color:var(--mid); font-size:0.86rem; line-height:1.85; font-weight:300; }
+
+    /* REVIEWS */
+    .reviews { background:var(--white); padding:6rem 3rem; }
+    .reviews-hd { text-align:center; margin-bottom:3.5rem; }
+    .reviews-hd .eyebrow { justify-content:center; }
+    .reviews-hd .eyebrow::after { display:none; }
+    .reviews-hd h2 { font-family:'Playfair Display',serif; font-size:2.6rem; color:var(--brown); }
+    .reviews-hd h2 em { font-style:italic; color:var(--terra); }
+    .notes-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; max-width:1000px; margin:0 auto; }
+    .note { padding:1.8rem; border-radius:3px; position:relative; box-shadow:2px 4px 20px rgba(139,69,19,0.07); }
+    .note:nth-child(1) { background:#fffaeb; transform:rotate(-1.2deg); }
+    .note:nth-child(2) { background:#fff5f8; transform:rotate(0.9deg); margin-top:1.2rem; }
+    .note:nth-child(3) { background:#f5fff0; transform:rotate(-0.5deg); }
+    .note-pin { position:absolute; top:-9px; left:50%; transform:translateX(-50%); width:14px; height:14px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#e06060,#a83030); box-shadow:0 2px 6px rgba(168,48,48,0.35); }
+    .note-stars { color:var(--terra); font-size:0.85rem; letter-spacing:2px; margin-bottom:0.9rem; }
+    .note p { font-family:'Playfair Display',serif; font-style:italic; font-size:0.9rem; color:var(--brown); line-height:1.75; margin-bottom:1rem; }
+    .note-name { font-family:'Dancing Script',cursive; font-size:1.2rem; color:var(--terra); }
+
+    /* CONTACT */
+    .contact { background:var(--cream); padding:6rem 3rem; display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:start; }
+    .contact-left h2 { font-family:'Playfair Display',serif; font-size:2.4rem; color:var(--brown); line-height:1.2; margin-bottom:0.9rem; }
+    .contact-left h2 em { font-style:italic; color:var(--terra); }
+    .contact-left p { color:var(--mid); font-size:0.9rem; line-height:1.8; margin-bottom:1.8rem; font-weight:300; }
+    .wa-btn { display:inline-flex; align-items:center; gap:0.75rem; background:#25d366; color:#fff; padding:0.95rem 1.9rem; border-radius:50px; font-weight:500; font-size:0.88rem; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 24px rgba(37,211,102,0.28); margin-bottom:2rem; text-decoration:none; transition:opacity 0.2s; }
+    .wa-btn:hover { opacity:0.9; }
+    .contact-facts { display:flex; flex-direction:column; gap:0.85rem; }
+    .fact { display:flex; align-items:center; gap:0.75rem; color:var(--mid); font-size:0.86rem; }
+    .fact-dot { width:6px; height:6px; border-radius:50%; background:rgba(196,112,58,0.4); flex-shrink:0; }
+    .order-form { display:flex; flex-direction:column; gap:1.1rem; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .field label { display:block; font-size:0.7rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--mid); margin-bottom:0.45rem; }
+    .field input, .field select, .field textarea { width:100%; background:var(--white); border:1px solid rgba(196,112,58,0.2); padding:0.85rem 1rem; border-radius:8px; color:var(--brown); font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; transition:border-color 0.2s; -webkit-appearance:none; appearance:none; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color:rgba(196,112,58,0.5); }
+    .field textarea { resize:vertical; min-height:96px; }
+    .send-btn { background:var(--terra); color:var(--white); border:none; padding:1rem 2rem; border-radius:50px; font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:500; cursor:pointer; transition:opacity 0.2s; margin-top:0.4rem; }
+    .send-btn:hover { opacity:0.88; }
+
+    /* FOOTER */
+    footer { background:var(--white); border-top:1px solid rgba(196,112,58,0.1); padding:2.5rem 3rem; display:flex; justify-content:space-between; align-items:center; }
+    .footer-right { text-align:right; color:rgba(61,26,8,0.3); font-size:0.78rem; line-height:1.8; }
+
+    /* SCROLL REVEAL */
+    .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1); }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* MOBILE */
+    @media (max-width:768px) {
+      nav { padding:1.1rem 1.5rem; }
+      .nav-links, .nav-cta { display:none; }
+      .nav-mobile-toggle { display:block; }
+      .hero { height:100svh; }
+      .hero-text { margin-top:24vh; }
+      .hero-tagline { font-size:1rem; padding:0 1rem; }
+      .hero-logo-wrap svg { width:200px; }
+      .marquee-item { font-size:0.85rem; padding:0 1.2rem; }
+      .menu-inner { padding:3.5rem 1.5rem; }
+      .menu-header { flex-direction:column; align-items:flex-start; gap:0.75rem; }
+      .menu-header p { text-align:left; max-width:100%; }
+      .menu-grid { grid-template-columns:1fr; gap:1rem; }
+      .about { grid-template-columns:1fr; }
+      .about-img { min-height:340px; }
+      .about-copy { padding:2.5rem 1.5rem; }
+      .about-copy h2 { font-size:1.9rem; }
+      .how { padding:4rem 1.5rem; }
+      .how-inner h2 { font-size:2rem; }
+      .steps { grid-template-columns:1fr; gap:2rem; }
+      .steps::before { display:none; }
+      .reviews { padding:4rem 1.5rem; }
+      .reviews-hd h2 { font-size:2rem; }
+      .notes-grid { grid-template-columns:1fr; gap:2rem; }
+      .note:nth-child(1), .note:nth-child(2), .note:nth-child(3) { transform:rotate(0); margin-top:0; }
+      .contact { grid-template-columns:1fr; padding:4rem 1.5rem; gap:2.5rem; }
+      .contact-left h2 { font-size:2rem; }
+      .form-row { grid-template-columns:1fr; }
+      footer { flex-direction:column; gap:1rem; text-align:center; padding:2rem 1.5rem; }
+      .footer-right { text-align:center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="mainNav">
+    <div class="nav-logo">
+      <svg width="148" height="50" viewBox="0 0 148 50" fill="none" style="overflow:visible" aria-label="Ship Bakes">
+        <text x="2" y="33" font-family="'Dancing Script', cursive" font-size="30" font-weight="700" fill="#fffef9" id="logoText">Ship Bakes</text>
+        <path d="M2 40 Q18 36 36 40 Q56 44 74 40 Q92 36 112 40 Q126 43 142 39" stroke="#fffef9" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.55" id="logoLine"/>
+        <path d="M74 40 Q75 46 74 50" stroke="#fffef9" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4" id="logoDrip1"/>
+        <path d="M36 40 Q37 44 36 47" stroke="#fffef9" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.3" id="logoDrip2"/>
+        <path d="M112 40 Q113 44 112 47" stroke="#fffef9" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.3" id="logoDrip3"/>
+      </svg>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#cakes">Cakes</a></li>
+      <li><a href="#about">Story</a></li>
+      <li><a href="#order">Order</a></li>
+    </ul>
+    <button class="nav-cta" onclick="document.getElementById('order').scrollIntoView({behavior:'smooth'})">Order Now</button>
+    <button class="nav-mobile-toggle" aria-label="Open menu">
+      <div class="hamburger"><span></span><span></span><span></span></div>
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-photo" id="heroPhoto"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-grade"></div>
+    <div class="hero-text">
+      <div class="hero-logo-wrap">
+        <svg width="290" height="94" viewBox="0 0 290 94" fill="none" style="overflow:visible" aria-label="Ship Bakes">
+          <text x="4" y="62" font-family="'Dancing Script', cursive" font-size="58" font-weight="700" fill="#fffef9">Ship Bakes</text>
+          <path d="M4 72 Q30 66 58 72 Q90 78 145 72 Q200 66 232 72 Q260 77 282 70" stroke="#fffef9" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.52"/>
+          <path d="M145 72 Q147 82 145 90" stroke="#fffef9" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.38"/>
+          <path d="M58 72 Q59 79 58 84" stroke="#fffef9" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.28"/>
+          <path d="M232 72 Q233 79 232 84" stroke="#fffef9" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.28"/>
+        </svg>
+      </div>
+      <p class="hero-tagline">Baked with love, <strong>made from scratch</strong></p>
+      <div class="scroll-hint">Scroll</div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item">Birthday Cakes</span><span class="marquee-dot"> ✦ </span>
+      <span class="marquee-item">Celebration Cakes</span><span class="marquee-dot"> ✦ </span>
+      <span class="marquee-item">Cupcakes</span><span class="marquee-dot"> ✦ </span>
+      <span class="marquee-item">Made from Scratch</span><span class="marquee-dot"> ✦ </span>
+      <span class="marquee-item">Real Butter. Real Love.</span><span class="marquee-dot"> ✦ </span>
+      <span class="marquee-item">Collect Only</span><span class="marquee-dot"> ✦ </span>
+      <span class="marquee-item">Birthday Cakes</span><span class="marquee-dot"> ✦ </span>
+      <span class="marquee-item">Celebration Cakes</span><span class="marquee-dot"> ✦ </span>
+      <span class="marquee-item">Cupcakes</span><span class="marquee-dot"> ✦ </span>
+      <span class="marquee-item">Made from Scratch</span><span class="marquee-dot"> ✦ </span>
+      <span class="marquee-item">Real Butter. Real Love.</span><span class="marquee-dot"> ✦ </span>
+      <span class="marquee-item">Collect Only</span><span class="marquee-dot"> ✦ </span>
+    </div>
+  </div>
+
+  <!-- CAKES -->
+  <section class="menu" id="cakes">
+    <div class="menu-bg-photo"></div>
+    <div class="menu-bg-overlay"></div>
+    <div class="menu-inner">
+      <div class="menu-header reveal">
+        <div>
+          <div class="eyebrow">What we bake</div>
+          <h2>The <em>cakes.</em></h2>
+        </div>
+        <p>Handcrafted to order.<br>Never off a shelf.<br>Always from scratch.</p>
+      </div>
+      <div class="menu-grid">
+        <div class="menu-card reveal" style="transition-delay:0.05s">
+          <div class="menu-card-num">01</div>
+          <h3>Birthday Cakes</h3>
+          <p>Custom flavours, custom decorations, custom everything. Your birthday should taste exactly the way you imagined it.</p>
+          <div class="card-cta">Order this</div>
+        </div>
+        <div class="menu-card reveal" style="transition-delay:0.12s">
+          <div class="menu-card-num">02</div>
+          <h3>Celebration Cakes</h3>
+          <p>Baby showers, graduations, promotions. If it deserves a moment — it deserves a cake to match.</p>
+          <div class="card-cta">Order this</div>
+        </div>
+        <div class="menu-card reveal" style="transition-delay:0.19s">
+          <div class="menu-card-num">03</div>
+          <h3>Cupcakes</h3>
+          <p>Perfectly portioned, beautifully decorated. For events, parties, or twelve of them on a Wednesday night.</p>
+          <div class="card-cta">Order this</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="about-img">
+      <div class="about-quote reveal">
+        <blockquote>"Every cake I make starts the same way — with the person I'm making it for in mind."</blockquote>
+        <div class="about-quote-sig">— The Baker</div>
+      </div>
+    </div>
+    <div class="about-copy">
+      <div class="eyebrow reveal">Her story</div>
+      <h2 class="reveal">Every cake starts with<br>someone to <em>celebrate.</em></h2>
+      <p class="reveal" style="transition-delay:0.08s">I've been baking from this kitchen for as long as I can remember. It started as a way to show love — and somehow it became something people drive across town for.</p>
+      <p class="reveal" style="transition-delay:0.13s">No mixes. No shortcuts. Real butter, real eggs, tasted at least three times. That's just how it has to be.</p>
+      <p class="reveal" style="transition-delay:0.18s">Whether it's a birthday, a milestone, or a Tuesday that deserves something special — I want to be part of it.</p>
+      <div class="scratch-badge reveal" style="transition-delay:0.23s">✦ Made from scratch, every single time</div>
+    </div>
+  </section>
+
+  <!-- HOW TO ORDER -->
+  <section class="how" id="how">
+    <div class="how-inner">
+      <div class="eyebrow reveal" style="justify-content:center;margin-bottom:0.75rem">How it works</div>
+      <h2 class="reveal">Three steps to your <em>perfect</em> cake</h2>
+      <p class="how-sub reveal" style="transition-delay:0.08s">Simple. Personal. Delicious.</p>
+      <div class="steps">
+        <div class="step reveal" style="transition-delay:0.05s">
+          <div class="step-n">1</div>
+          <h3>Choose Your Cake</h3>
+          <p>Browse what we bake and tell us what you have in mind. Not sure yet? That's what WhatsApp is for.</p>
+        </div>
+        <div class="step reveal" style="transition-delay:0.12s">
+          <div class="step-n">2</div>
+          <h3>Place Your Order</h3>
+          <p>Send a WhatsApp or fill in the form below. Tell us your date, flavour, and any special touches.</p>
+        </div>
+        <div class="step reveal" style="transition-delay:0.19s">
+          <div class="step-n">3</div>
+          <h3>Collect &amp; Celebrate</h3>
+          <p>Come collect on your agreed date. Pay on collection. Take your cake home and make someone cry happy tears.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="reviews" id="reviews">
+    <div class="reviews-hd">
+      <div class="eyebrow reveal">Straight from the heart</div>
+      <h2 class="reveal">What people <em>say</em></h2>
+    </div>
+    <div class="notes-grid">
+      <div class="note reveal" style="transition-delay:0.05s">
+        <div class="note-pin"></div>
+        <div class="note-stars">★★★★★</div>
+        <p>"The cake was absolutely stunning. I didn't even want to cut it. Every person at the party asked where I got it."</p>
+        <div class="note-name">— Nomvula T.</div>
+      </div>
+      <div class="note reveal" style="transition-delay:0.12s">
+        <div class="note-pin"></div>
+        <div class="note-stars">★★★★★</div>
+        <p>"She made exactly what I described, down to the last detail. My daughter was in happy tears. Worth every cent."</p>
+        <div class="note-name">— Kagiso M.</div>
+      </div>
+      <div class="note reveal" style="transition-delay:0.19s">
+        <div class="note-pin"></div>
+        <div class="note-stars">★★★★★</div>
+        <p>"Best carrot cake I've ever had. And I've had a lot of carrot cake. Book early — she's always in demand!"</p>
+        <div class="note-name">— Priya S.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ORDER / CONTACT -->
+  <section class="contact" id="order">
+    <div class="contact-left">
+      <div class="eyebrow reveal">Let's bake together</div>
+      <h2 class="reveal">Order your <em>cake.</em></h2>
+      <p class="reveal" style="transition-delay:0.08s">Ready to make someone's day unforgettable? Send us a WhatsApp or fill in the form — we'll get back to you quickly.</p>
+      <!-- REPLACE 27000000000 with her real WhatsApp number — no spaces, no + -->
+      <a class="wa-btn reveal" style="transition-delay:0.13s" href="https://wa.me/27000000000" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Chat with us on WhatsApp
+      </a>
+      <div class="contact-facts reveal" style="transition-delay:0.18s">
+        <div class="fact"><span class="fact-dot"></span>Address shared on order confirmation</div>
+        <div class="fact"><span class="fact-dot"></span>Mon – Sat · 8am to 6pm</div>
+        <div class="fact"><span class="fact-dot"></span>Please order at least 3 days in advance</div>
+        <div class="fact"><span class="fact-dot"></span>Pay on collection — no card needed</div>
+      </div>
+    </div>
+    <!-- REPLACE hello@shipbakes.co.za with her real email -->
+    <form class="order-form reveal" style="transition-delay:0.1s" action="mailto:hello@shipbakes.co.za" method="post" enctype="text/plain">
+      <div class="form-row">
+        <div class="field">
+          <label for="name">Your name</label>
+          <input type="text" id="name" name="name" placeholder="Thabo Dlamini" required>
+        </div>
+        <div class="field">
+          <label for="phone">Phone number</label>
+          <input type="tel" id="phone" name="phone" placeholder="072 000 0000" required>
+        </div>
+      </div>
+      <div class="field">
+        <label for="cake">Cake type</label>
+        <select id="cake" name="cake">
+          <option>Birthday Cake</option>
+          <option>Celebration Cake</option>
+          <option>Cupcakes</option>
+          <option>Not sure yet — help me decide</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="date">Date needed</label>
+        <input type="date" id="date" name="date" required>
+      </div>
+      <div class="field">
+        <label for="notes">Tell us more</label>
+        <textarea id="notes" name="notes" placeholder="Flavours, colours, size, decorations... the more detail the better!"></textarea>
+      </div>
+      <button type="submit" class="send-btn">Send My Order Request →</button>
+    </form>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <svg width="130" height="46" viewBox="0 0 130 46" fill="none" style="overflow:visible" aria-label="Ship Bakes">
+      <text x="2" y="29" font-family="'Dancing Script', cursive" font-size="27" font-weight="700" fill="#c4703a">Ship Bakes</text>
+      <path d="M2 36 Q16 32 32 36 Q50 40 65 36 Q82 32 100 36 Q113 39 126 35" stroke="#c4703a" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.42"/>
+      <path d="M65 36 Q66 41 65 44" stroke="#c4703a" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.32"/>
+    </svg>
+    <div class="footer-right">
+      Baked with love in South Africa · Collect only<br>
+      © 2025 Ship Bakes · Built with love by CronKode
+    </div>
+  </footer>
+
+  <script>
+    // Nav scroll + logo colour switch
+    const nav = document.getElementById('mainNav');
+    const logoText  = document.getElementById('logoText');
+    const logoLine  = document.getElementById('logoLine');
+    const drips     = ['logoDrip1','logoDrip2','logoDrip3'].map(id => document.getElementById(id));
+
+    window.addEventListener('scroll', () => {
+      const past = window.scrollY > 60;
+      nav.classList.toggle('scrolled', past);
+      const c = past ? '#c4703a' : '#fffef9';
+      if (logoText) logoText.setAttribute('fill', c);
+      if (logoLine) logoLine.setAttribute('stroke', c);
+      drips.forEach(d => { if (d) d.setAttribute('stroke', c); });
+    }, { passive: true });
+
+    // Scroll reveal
+    const revealEls = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => obs.observe(el));
+
+    // Hero photo scroll-driven zoom + blur — icing distortion effect
+    const heroPhoto = document.getElementById('heroPhoto');
+    window.addEventListener('scroll', () => {
+      const heroH = document.getElementById('hero').offsetHeight;
+      const p = Math.min(1, Math.max(0, (window.scrollY - heroH * 0.1) / (heroH * 0.8)));
+      if (!heroPhoto) return;
+      const scale      = 1 + p * 0.1;
+      const blurVal    = p * 10;
+      const brightness = 1 + p * 0.06;
+      heroPhoto.style.transform = `scale(${scale})`;
+      heroPhoto.style.filter    = `blur(${blurVal}px) brightness(${brightness}) saturate(${1 + p * 0.15})`;
+    }, { passive: true });
+  </script>
+
+</body>
+</html>
